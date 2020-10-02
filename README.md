@@ -1,5 +1,5 @@
 # e-commerce-project
-This is a simple website built with django
+This is an ecommerce application for Buying electronics equipment
 
 
 # [Electronics](https://joanna-folawemi-ecommerce.herokuapp.com/)
@@ -18,5 +18,5 @@ python manage.py migrate
 
 ### Update requirement.txt
 ```
-pip3 freeeze > requirement.txt
+pip3 freeze > requirement.txt
 ```
