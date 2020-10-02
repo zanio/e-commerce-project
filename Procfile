@@ -1,1 +1,1 @@
-web: gunicorn thevillage.wsgi
+web: gunicorn ecom.wsgi
