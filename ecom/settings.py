@@ -1,6 +1,12 @@
 import os
+import dj_database_url
 import environ
+from dotenv import load_dotenv
+from pathlib import Path  # Python 3.6+ only
 
+env_path = Path('./ecom') / '.env'
+print("env_path {}".format(env_path))
+load_dotenv(dotenv_path=env_path)
 env = environ.Env()
 
 # read the .env file
@@ -9,15 +15,15 @@ environ.Env.read_env()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
-SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
-EMAIL_HOST = os.environ.get("EMAIL_HOST")
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+SENDGRID_API_KEY = env("SENDGRID_API_KEY")
+EMAIL_HOST = env("EMAIL_HOST")
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 INSTALLED_APPS = [
@@ -33,7 +39,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'crispy_forms',
-
+    'djecrety',
     'cart',
     'core',
     'staff'
@@ -71,12 +77,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ecom.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+DATABASES = {'default': dj_database_url.config()}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -134,20 +135,10 @@ if DEBUG is False:
     SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-    ALLOWED_HOSTS = ['www.domain.com']
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': '',
-            'USER': '',
-            'PASSWORD': '',
-            'HOST': '',
-            'PORT': ''
-        }
-    }
 
     PAYPAL_CLIENT_ID = env('PAYPAL_LIVE_CLIENT_ID')
     PAYPAL_SECRET_KEY = env('PAYPAL_LIVE_SECRET_KEY')
+
+options = DATABASES['default'].get('OPTIONS', {})
+options.pop('sslmode', None)
